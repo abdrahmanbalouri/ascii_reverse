@@ -9,7 +9,7 @@ import (
 var models map[byte][]string
 
 func main() {
-	models = BuildModels()
+ models= BuildModels()
 
 	
 	file, err := os.Open("fonts/t.txt")
@@ -20,26 +20,49 @@ func main() {
 	scanner := bufio.NewScanner(file)
 
 	var input []string
+	count:=0
 
-	  
-		for scanner.Scan(){
-			if scanner.Text()==""{
-				input = append(input,"" )
+	for scanner.Scan(){
+	
+		line:=scanner.Text()
+	
+		
+		if line!=""{
+			input = append(input, line)
+			count++
+
+		}
+		if count==8{
+			
+			if len(input)==8{
+				res:=BuildReverseString(input)
+				fmt.Println(res)
+				count=0
+				input=[]string{}
+				
+					
+				
+				
+
 			}
 			
-		input = append(input, scanner.Text())
+		}
+		if line==""{
+			fmt.Println()
+		}
+	
 	}
-	fmt.Println(input)
 
-	res := BuildReverseString(input)
-
-	fmt.Println(res)
 }
+			
+			
+	
+	
+	
 
-func PrintHelp() {
-	fmt.Print("Usage: go run . [OPTION]\n\nEX: go run . --reverse=<fileName>\n")
-	os.Exit(0)
-}
+
+	
+
 
 func BuildModels() map[byte][]string {
 	artFile, err := os.Open("fonts/standard.txt")
@@ -48,7 +71,7 @@ func BuildModels() map[byte][]string {
 		fmt.Println(err)
 		os.Exit(0)
 	}
-
+    defer artFile.Close()
 	lettersMap := make(map[byte][]string)
 	scanner := bufio.NewScanner(artFile)
 
@@ -65,15 +88,16 @@ func BuildModels() map[byte][]string {
 		currentLetter++
 
 	}
-	artFile.Close()
+	
 	return lettersMap
 }
 
 func BuildReverseString(input []string) string {
 	if len(input[0]) == 0 {
 		return ""
-	}
-
+	 }
+	
+     
 	letter := ' '
        
 	for letter <= '~' {
@@ -86,13 +110,14 @@ func BuildReverseString(input []string) string {
 				flag = false
 				break
 			}
+
 		}
 		if flag {
 			
 			var nextInput []string
 			for i := 0; i < 8; i++ {
 				nextInput = append(nextInput, input[i][letterSize:])
-				fmt.Println(len(nextInput[i]))
+			
 			}
 			
 			
